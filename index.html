@@ -85,9 +85,10 @@
                 do {
                     novoElemento = setas[Math.floor(Math.random() * setas.length)];
                 } while (novoElemento === ultimoElemento); // Garante que a seta seja diferente
-                tela.style.setProperty('--bg-color', '#000000');
-                tela.style.setProperty('--text-color', '#FFFFFF');
-                tela.innerHTML = `<div class="seta">${novoElemento}</div>`;
+                tela.style.setProperty('--bg-color', '#FFFFFF'); // Fundo branco
+                tela.style.setProperty('--text-color', '#000000'); // Texto preto
+                const textoDirecao = novoElemento === "→" ? "Direita" : "Esquerda"; // Define o texto da direção
+                tela.innerHTML = `<div class="seta">${novoElemento}<br><span style="font-size: 5vw;">${textoDirecao}</span></div>`;
             }
 
             ultimoElemento = novoElemento; // Atualiza o último elemento exibido
