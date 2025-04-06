@@ -24,7 +24,6 @@
             font-size: 15vw;
             text-align: center;
             cursor: pointer;
-            position: relative;
         }
         
         .cor {
@@ -35,17 +34,6 @@
         .seta {
             font-size: 25vw;
             text-shadow: 0 0 20px white;
-        }
-        
-        #linguagem-indicator {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border-radius: 5px;
-            font-size: 14px;
         }
         
         #inicio {
@@ -109,9 +97,7 @@
         <button id="botaoIniciar" class="botao">Iniciar</button>
     </div>
     
-    <div id="tela" class="cor" style="display: none;">
-        <div id="linguagem-indicator">JavaScript</div>
-    </div>
+    <div id="tela" class="cor" style="display: none;"></div>
 
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     
@@ -124,21 +110,21 @@
             {nome: "ROSA", bg: "#FD79A8", text: "#FFFFFF"}
         ];
 
-        const setas = ["→", "←"];
+        const setas = ["←", "→"]; // Somente setas para esquerda e direita
         const tela = document.getElementById('tela');
         const inicio = document.getElementById('inicio');
         const botaoIniciar = document.getElementById('botaoIniciar');
         const loading = document.getElementById('loading');
-        const linguagemIndicator = document.getElementById('linguagem-indicator');
         
-        let usandoPython = false;
-        let ultimoValor = null; // Armazena apenas o valor (nome ou seta)
+        let ultimoValor = null;
         let pyodideLoaded = false;
 
-        // Função para iniciar o jogo
+        function escolherAleatorio() {
+            return Math.random() < 0.5; // 50% de chance para cada linguagem
+        }
+
         botaoIniciar.addEventListener('click', iniciarJogo);
         
-        // Também inicia com a tecla Espaço
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Space' && inicio.style.display !== 'none') {
                 event.preventDefault();
@@ -155,12 +141,11 @@
             }, 500);
         }
 
-        // Função em JavaScript puro
         function mostrarElementoJS() {
             let novoValor;
             let elemento;
 
-            if (Math.random() < 0.85) { // 85% cores
+            if (Math.random() < 0.7) { // 70% cores, 30% setas
                 do {
                     elemento = cores[Math.floor(Math.random() * cores.length)];
                     novoValor = elemento.nome;
@@ -168,23 +153,20 @@
                 
                 tela.style.setProperty('--bg-color', elemento.bg);
                 tela.style.setProperty('--text-color', elemento.text);
-                tela.innerHTML = `<div>${elemento.nome}</div><div id="linguagem-indicator">JavaScript</div>`;
-            } else { // 15% setas
+                tela.innerHTML = `<div>${elemento.nome}</div>`;
+            } else {
                 do {
                     novoValor = setas[Math.floor(Math.random() * setas.length)];
                 } while (novoValor === ultimoValor);
                 
                 tela.style.setProperty('--bg-color', '#000000');
                 tela.style.setProperty('--text-color', '#FFFFFF');
-                tela.innerHTML = `<div class="seta">${novoValor}</div><div id="linguagem-indicator">JavaScript</div>`;
+                tela.innerHTML = `<div class="seta">${novoValor}</div>`;
             }
 
             ultimoValor = novoValor;
-            linguagemIndicator.textContent = 'JavaScript';
-            linguagemIndicator.style.backgroundColor = 'rgba(0,0,0,0.7)';
         }
 
-        // Configuração do Pyodide
         async function setupPython() {
             loading.style.display = 'flex';
             
@@ -195,7 +177,6 @@
                 
                 await pyodide.loadPackage("numpy");
                 
-                // Passa as variáveis do JS para o Python
                 pyodide.globals.set("cores_py", cores);
                 pyodide.globals.set("setas_py", setas);
                 
@@ -209,29 +190,29 @@
                         global ultimo_elemento_py
                         novo_elemento = None
                         
-                        if np.random.random() < 0.85:  # 85% cores
+                        if np.random.random() < 0.7:  # 70% cores, 30% setas
                             while True:
-                                novo_elemento = cores_py[np.random.randint(0, len(cores_py))]
+                                idx = np.random.randint(0, len(cores_py))
+                                novo_elemento = cores_py[idx]
                                 if novo_elemento["nome"] != ultimo_elemento_py:
                                     break
                             document.getElementById("tela").style.setProperty('--bg-color', novo_elemento["bg"])
                             document.getElementById("tela").style.setProperty('--text-color', novo_elemento["text"])
-                            document.getElementById("tela").innerHTML = f'<div>{novo_elemento["nome"]}</div><div id="linguagem-indicator">Python</div>'
-                        else:  # 15% setas
+                            document.getElementById("tela").innerHTML = f'<div>{novo_elemento["nome"]}</div>'
+                        else:
                             while True:
-                                novo_elemento = setas_py[np.random.randint(0, len(setas_py))]
+                                idx = np.random.randint(0, len(setas_py))
+                                novo_elemento = setas_py[idx]
                                 if novo_elemento != ultimo_elemento_py:
                                     break
                             document.getElementById("tela").style.setProperty('--bg-color', '#000000')
                             document.getElementById("tela").style.setProperty('--text-color', '#FFFFFF')
-                            document.getElementById("tela").innerHTML = f'<div class="seta">{novo_elemento}</div><div id="linguagem-indicator">Python</div>'
+                            document.getElementById("tela").innerHTML = f'<div class="seta">{novo_elemento}</div>'
 
                         ultimo_elemento_py = novo_elemento if isinstance(novo_elemento, str) else novo_elemento["nome"]
-                        document.getElementById("linguagem-indicator").style.backgroundColor = "rgba(0,100,0,0.7)"
                 `);
                 
                 pyodideLoaded = true;
-                console.log("Python carregado com sucesso!");
                 return pyodide;
             } catch (e) {
                 console.error("Erro ao carregar Python:", e);
@@ -241,31 +222,25 @@
             }
         }
 
-        // Alterna entre JavaScript e Python
         async function mostrarElemento() {
-            if (usandoPython && window.pyodide && pyodideLoaded) {
+            const usarPython = pyodideLoaded && escolherAleatorio();
+            
+            if (usarPython) {
                 window.pyodide.runPython("mostrar_elemento_py()");
-                linguagemIndicator.textContent = 'Python';
-                linguagemIndicator.style.backgroundColor = 'rgba(0,100,0,0.7)';
             } else {
                 mostrarElementoJS();
             }
-            usandoPython = !usandoPython;
             
-            // Atualiza o último valor para ambas as linguagens
             if (window.pyodide && pyodideLoaded) {
                 window.pyodide.globals.set("ultimo_elemento_py", ultimoValor);
             }
         }
 
-        // Inicialização
         (async function() {
             window.pyodide = await setupPython();
             
-            // Começa ao clicar na tela
             tela.addEventListener('click', mostrarElemento);
             
-            // Ou com a tecla espaço
             document.addEventListener('keydown', (event) => {
                 if (event.code === 'Space' && inicio.style.display === 'none') {
                     event.preventDefault();
