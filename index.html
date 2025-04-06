@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mistura de Linguagens no Navegador</title>
+    <title>Realidade Virtual e Gamificação na Reabilitação</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
@@ -110,7 +110,7 @@
             {nome: "ROSA", bg: "#FD79A8", text: "#FFFFFF"}
         ];
 
-        const setas = ["←", "→"]; // Somente setas para esquerda e direita
+        const setas = ["←", "→"];
         const tela = document.getElementById('tela');
         const inicio = document.getElementById('inicio');
         const botaoIniciar = document.getElementById('botaoIniciar');
@@ -118,10 +118,6 @@
         
         let ultimoValor = null;
         let pyodideLoaded = false;
-
-        function escolherAleatorio() {
-            return Math.random() < 0.5; // 50% de chance para cada linguagem
-        }
 
         botaoIniciar.addEventListener('click', iniciarJogo);
         
@@ -145,7 +141,7 @@
             let novoValor;
             let elemento;
 
-            if (Math.random() < 0.7) { // 70% cores, 30% setas
+            if (Math.random() < 0.7) {
                 do {
                     elemento = cores[Math.floor(Math.random() * cores.length)];
                     novoValor = elemento.nome;
@@ -190,7 +186,7 @@
                         global ultimo_elemento_py
                         novo_elemento = None
                         
-                        if np.random.random() < 0.7:  # 70% cores, 30% setas
+                        if np.random.random() < 0.7:
                             while True:
                                 idx = np.random.randint(0, len(cores_py))
                                 novo_elemento = cores_py[idx]
@@ -223,7 +219,7 @@
         }
 
         async function mostrarElemento() {
-            const usarPython = pyodideLoaded && escolherAleatorio();
+            const usarPython = pyodideLoaded && Math.random() < 0.5;
             
             if (usarPython) {
                 window.pyodide.runPython("mostrar_elemento_py()");
