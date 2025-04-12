@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Realidade Virtual e Gamificação na Reabilitação</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
@@ -10,10 +12,12 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             font-family: 'Roboto', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5); /* Gradiente mais vibrante */
+            color: #333;
+            overflow: hidden;
         }
-        
+
         #tela {
             width: 100%;
             height: 100%;
@@ -24,18 +28,25 @@
             font-size: 15vw;
             text-align: center;
             cursor: pointer;
+            background: rgba(255, 255, 255, 0.8); /* Fundo translúcido */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra moderna */
+            background-color: var(--bg-color, #FFFFFF); /* Cor de fundo padrão */
+            color: var(--text-color, #000000); /* Cor do texto padrão */
         }
-        
+
         .cor {
             background-color: var(--bg-color);
             color: var(--text-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
-        
+
         .seta {
             font-size: 25vw;
             text-shadow: 0 0 20px white;
         }
-        
+
         #inicio {
             width: 100%;
             height: 100%;
@@ -43,10 +54,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundo translúcido */
             transition: opacity 0.5s;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
+
         #loading {
             display: none;
             position: fixed;
@@ -54,34 +68,108 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.9);
+            background: rgba(0, 0, 0, 0.7); /* Fundo escuro */
+            color: white;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            font-size: 1.5vw;
+            text-align: center;
         }
-        
+
+        /* Botões */
         .botao {
             padding: 15px 30px;
             font-size: 1.5vw;
             cursor: pointer;
-            background: #3498DB;
+            background: linear-gradient(135deg, #6DD5FA, #2980B9); /* Gradiente suave */
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px; /* Bordas arredondadas */
             margin-top: 20px;
-            transition: all 0.3s;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
         }
-        
+
         .botao:hover {
-            background: #2980B9;
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #2980B9, #1A5276); /* Gradiente ao passar o mouse */
+            transform: scale(1.1); /* Efeito de zoom */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
         }
-        
+
+        /* Títulos */
+        h1 {
+            font-size: 3vw;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2C3E50; /* Cor mais elegante */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra no texto */
+        }
+
+        /* Textos de instrução */
         .instrucao {
-            font-size: 1.2vw;
+            font-size: 1.5vw;
             color: #555;
             margin-top: 20px;
+            text-align: center;
+            line-height: 1.5; /* Melhor espaçamento entre linhas */
+        }
+
+        /* Tabela */
+        table {
+            width: 50%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 1.2vw;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9); /* Fundo translúcido */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #3498DB, #2980B9); /* Gradiente no cabeçalho */
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            background: #f9f9f9;
+        }
+
+        td:hover {
+            background: #f1f1f1; /* Efeito ao passar o mouse */
+        }
+
+        /* Botão "Parar Teste" */
+        #botaoParar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 1.2vw;
+            background: linear-gradient(135deg, #E74C3C, #C0392B); /* Gradiente no botão de parar */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 200;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #botaoParar:hover {
+            background: linear-gradient(135deg, #C0392B, #922B21); /* Gradiente ao passar o mouse */
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
@@ -98,6 +186,7 @@
     </div>
     
     <div id="tela" class="cor" style="display: none;"></div>
+    <button id="botaoParar">Parar Teste</button>
 
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     
@@ -114,18 +203,55 @@
         const tela = document.getElementById('tela');
         const inicio = document.getElementById('inicio');
         const botaoIniciar = document.getElementById('botaoIniciar');
+        const botaoParar = document.getElementById('botaoParar');
         const loading = document.getElementById('loading');
         
         let ultimoValor = null;
         let pyodideLoaded = false;
+        let testeAtivo = false;
+
+        let acertos = 0;
+        let erros = 0;
+        let temposReacao = [];
+        let tempoInicioElemento = null;
 
         botaoIniciar.addEventListener('click', iniciarJogo);
+        botaoParar.addEventListener('click', pararTeste);
         
         document.addEventListener('keydown', (event) => {
-            if (event.code === 'Space' && inicio.style.display !== 'none') {
+            if (event.code === 'Space') {
                 event.preventDefault();
-                iniciarJogo();
+                if (testeAtivo) {
+                    pararTeste(); // Aciona o botão de parar durante o teste
+                } else if (inicio.style.display !== 'none') {
+                    iniciarJogo(); // Inicia o jogo se ainda não começou
+                }
             }
+        });
+
+        tela.addEventListener('mousedown', (event) => {
+            if (!testeAtivo) return;
+
+            const tempoReacao = Date.now() - tempoInicioElemento;
+            temposReacao.push(tempoReacao);
+
+            if (event.button === 0) {
+                // Botão esquerdo do mouse
+                console.log("Acerto!");
+                acertos++;
+            } else if (event.button === 2) {
+                // Botão direito do mouse
+                console.log("Erro!");
+                erros++;
+            }
+
+            // Exibe o próximo elemento, independentemente de acerto ou erro
+            mostrarElemento();
+        });
+
+        // Previne o menu de contexto ao clicar com o botão direito
+        tela.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
         });
 
         function iniciarJogo() {
@@ -133,11 +259,82 @@
             setTimeout(() => {
                 inicio.style.display = 'none';
                 tela.style.display = 'flex';
+                botaoParar.style.display = 'block';
+                testeAtivo = true;
                 mostrarElemento();
             }, 500);
         }
 
+        function isMobileDevice() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        function pararTeste() {
+            testeAtivo = false;
+            tela.style.display = 'none';
+            botaoParar.style.display = 'none';
+
+            // Calcula a média do tempo de reação em segundos
+            const mediaReacao = temposReacao.length > 0
+                ? (temposReacao.reduce((a, b) => a + b, 0) / temposReacao.length / 1000).toFixed(1)
+                : 0;
+
+            // Verifica se é um dispositivo móvel
+            if (isMobileDevice()) {
+                // Exibe apenas o tempo de reação no celular
+                inicio.style.display = 'flex';
+                inicio.style.opacity = '1';
+                inicio.innerHTML = `
+                    <h1 style="font-size: 3vw; text-align: center; margin-bottom: 30px;">Teste Finalizado</h1>
+                    <p style="font-size: 2vw; text-align: center;">Média do Tempo de Reação: ${mediaReacao} segundos</p>
+                    <button id="botaoIniciar" class="botao">Reiniciar</button>
+                `;
+            } else {
+                // Exibe a tabela completa em dispositivos não móveis
+                inicio.style.display = 'flex';
+                inicio.style.opacity = '1';
+                inicio.innerHTML = `
+                    <h1 style="font-size: 3vw; text-align: center; margin-bottom: 30px;">Teste Finalizado</h1>
+                    <table style="width: 50%; margin: 0 auto; border-collapse: collapse; font-size: 1.2vw; text-align: center;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Média do Tempo de Reação</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Acertos</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Erros</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${mediaReacao}</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${acertos}</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">${erros}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button id="botaoIniciar" class="botao">Reiniciar</button>
+                `;
+            }
+
+            // Reinicia os contadores ao clicar no botão "Reiniciar"
+            const novoBotaoIniciar = document.getElementById('botaoIniciar');
+            novoBotaoIniciar.addEventListener('click', () => {
+                // Redefine os valores e limpa a tabela
+                acertos = 0;
+                erros = 0;
+                temposReacao = [];
+                inicio.innerHTML = `
+                    <h1 style="font-size: 3vw; text-align: center; margin-bottom: 30px;">Realidade Virtual e Gamificação na Reabilitação</h1>
+                    <p class="instrucao">Clique no botão abaixo ou pressione Espaço para avançar</p>
+                    <button id="botaoIniciar" class="botao">Iniciar</button>
+                `;
+                const botaoIniciar = document.getElementById('botaoIniciar');
+                botaoIniciar.addEventListener('click', iniciarJogo);
+            });
+        }
+
         function mostrarElementoJS() {
+            if (!testeAtivo) return;
+
             let novoValor;
             let elemento;
 
@@ -161,6 +358,7 @@
             }
 
             ultimoValor = novoValor;
+            tempoInicioElemento = Date.now(); // Marca o tempo de início do elemento
         }
 
         async function setupPython() {
@@ -219,6 +417,8 @@
         }
 
         async function mostrarElemento() {
+            if (!testeAtivo) return;
+
             const usarPython = pyodideLoaded && Math.random() < 0.5;
             
             if (usarPython) {
