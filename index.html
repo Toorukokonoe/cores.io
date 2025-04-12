@@ -215,6 +215,8 @@
         let temposReacao = [];
         let tempoInicioElemento = null;
 
+        let bloqueioClique = false; // Variável para bloquear cliques rápidos
+
         botaoIniciar.addEventListener('click', iniciarJogo);
         botaoParar.addEventListener('click', pararTeste);
         
@@ -333,7 +335,9 @@
         }
 
         function mostrarElementoJS() {
-            if (!testeAtivo) return;
+            if (!testeAtivo || bloqueioClique) return; // Bloqueia se o teste não estiver ativo ou se o clique estiver bloqueado
+
+            bloqueioClique = true; // Bloqueia novos cliques até que o elemento seja exibido
 
             let novoValor;
             let elemento;
@@ -342,7 +346,7 @@
                 do {
                     elemento = cores[Math.floor(Math.random() * cores.length)];
                     novoValor = elemento.nome;
-                } while (novoValor === ultimoValor);
+                } while (novoValor === ultimoValor); // Garante que a cor não seja repetida
                 
                 tela.style.setProperty('--bg-color', elemento.bg);
                 tela.style.setProperty('--text-color', elemento.text);
@@ -350,15 +354,19 @@
             } else {
                 do {
                     novoValor = setas[Math.floor(Math.random() * setas.length)];
-                } while (novoValor === ultimoValor);
+                } while (novoValor === ultimoValor); // Garante que a seta não seja repetida
                 
                 tela.style.setProperty('--bg-color', '#000000');
                 tela.style.setProperty('--text-color', '#FFFFFF');
                 tela.innerHTML = `<div class="seta">${novoValor}</div>`;
             }
 
-            ultimoValor = novoValor;
+            ultimoValor = novoValor; // Atualiza o último valor exibido
             tempoInicioElemento = Date.now(); // Marca o tempo de início do elemento
+
+            setTimeout(() => {
+                bloqueioClique = false; // Libera o clique após um pequeno intervalo
+            }, 300); // Ajuste o tempo conforme necessário
         }
 
         async function setupPython() {
